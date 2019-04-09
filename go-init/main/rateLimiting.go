@@ -6,38 +6,33 @@ import (
 )
 
 func main() {
-	requests := make(chan int, 5)
+	reqs := make(chan int, 5)
 	for i := 1; i <= 5; i++ {
-		requests <- i
+		reqs <- i
 	}
-	close(requests)
+	close(reqs)
+	limiter := time.Tick(time.Second * 2)
 
-	limiter := time.Tick(time.Millisecond * 200)
-
-	for req := range requests {
+	for r := range reqs {
 		<-limiter
-		fmt.Println("request", req, time.Now())
+		fmt.Println("req", r, " time:", time.Now())
 	}
 
-	burstyLimiter := make(chan time.Time, 3)
-
-	for i := 0; i < 3; i++ {
-		burstyLimiter <- time.Now()
-	}
+	//脉冲限制
+	burstyReqs := make(chan time.Time, 5)
+	burstyReqs <- time.Now()
+	burstyReqs <- time.Now()
+	burstyReqs <- time.Now()
 
 	go func() {
-		for t := range time.Tick(time.Millisecond * 200) {
-			burstyLimiter <- t
+		for t := range time.Tick(time.Second * 2) {
+			burstyReqs <- t
 		}
 	}()
 
-	burstyRequests := make(chan int, 5)
-	for i := 1; i <= 5; i++ {
-		burstyRequests <- i
+	for i := 0; i < 5; i++ {
+		<-burstyReqs
+		fmt.Println("time:", time.Now())
 	}
-	close(burstyRequests)
-	for req := range burstyRequests {
-		<-burstyLimiter
-		fmt.Println("request", req)
-	}
+
 }
