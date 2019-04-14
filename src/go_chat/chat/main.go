@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/objx"
 	"html/template"
 	"log"
-	"mycode/trace"
+	"go_chat/trace"
 	"net/http"
 	"os"
 	"path/filepath"
