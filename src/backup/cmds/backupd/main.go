@@ -28,9 +28,9 @@ func main() {
 		}
 	}()
 	var (
-		interval = flag.Duration("interval", 10*time.Second, "interval between checks")
+		interval = flag.Duration("interval", 24*time.Hour, "interval between checks")
 		archive  = flag.String("archive", "archive", "path to archive location")
-		dbpath   = flag.String("db", "./db", "path to filedb database")
+		dbpath   = flag.String("db", "../backup/data", "path to filedb database")
 	)
 	flag.Parse()
 	m := &backup.Monitor{
