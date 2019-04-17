@@ -25,7 +25,7 @@ var DefaultArchiver = ZIP
 type zipper struct{}
 
 func (z *zipper) DestFmt() string {
-	return "%d.zip"
+	return "%v.zip"
 }
 
 func (z *zipper) Archive(src, dest string) error {
